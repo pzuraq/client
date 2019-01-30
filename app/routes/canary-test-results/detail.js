@@ -1,6 +1,6 @@
 import Route from '@ember/routing/route';
 
-export default Route.extend({
+export default class DetailRoute extends Route {
   model({ id }) {
     return this.store.findRecord('test-result', id, {
       include: [
@@ -10,4 +10,4 @@ export default Route.extend({
       ].join(',')
     });
   }
-});
+}

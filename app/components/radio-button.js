@@ -1,14 +1,16 @@
-import { computed } from '@ember/object';
+import { tagName } from "@ember-decorators/component";
+import { computed } from "@ember-decorators/object";
 import Component from '@ember/component';
 
-export default Component.extend({
-  tagName: 'span',
-  isSelected: computed('selected', 'option', function() {
+@tagName('span')
+export default class RadioButtonComponent extends Component {
+  @computed('selected', 'option')
+  get isSelected() {
     let selected = this.get('selected');
     let opt = this.get('option');
     if (!selected) {
       return false;
     }
     return opt.value === selected.value;
-  })
-});
+  }
+}

@@ -1,23 +1,24 @@
+import { action } from "@ember-decorators/object";
 import Route from '@ember/routing/route';
 
-export default Route.extend({
+export default class ApplicationRoute extends Route {
   beforeModel() {
     this.get('session').fetch();
-  },
-  actions: {
-    login(email, password) {
-      let route = this;
-      this.get('session').open(email, password).then(function() {
-        route.transitionTo('admin.index');
-      });
-    }
-  },
+  }
+
+  @action
+  login(email, password) {
+    let route = this;
+    this.get('session').open(email, password).then(function() {
+      route.transitionTo('admin.index');
+    });
+  }
 
   model() {
     return {
       categories: this.get('store').findAll('category', { include: 'subcategories,parent' })
     };
-  },
+  }
 
   title(tokens) {
     let tokenStr = tokens.join(' | ');
@@ -27,4 +28,4 @@ export default Route.extend({
       return 'Ember Observer';
     }
   }
-});
+}

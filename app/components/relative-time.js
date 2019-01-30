@@ -1,13 +1,15 @@
-import { computed } from '@ember/object';
+import { attribute, tagName } from "@ember-decorators/component";
+import { computed } from "@ember-decorators/object";
 import Component from '@ember/component';
 
-export default Component.extend({
-  tagName: 'time',
-  attributeBindings: ['isoDate:datetime', 'isoDate:title'],
+@tagName('time')
+export default class RelativeTimeComponent extends Component {
+  date = null;
 
-  date: null,
-  isoDate: computed('date', function() {
+  @computed('date')
+  @attribute("title")
+  get isoDate() {
     let date = this.get('date');
     return date ? date.toISOString() : null;
-  })
-});
+  }
+}

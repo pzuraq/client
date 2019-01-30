@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 
-export default Component.extend({
-  categories: null,
-  position: -1
-});
+export default class CategoryPositionDropdownComponent extends Component {
+  categories = null;
+  position = -1;
+}

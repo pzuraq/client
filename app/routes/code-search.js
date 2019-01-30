@@ -1,12 +1,12 @@
 import Route from '@ember/routing/route';
 
-export default Route.extend({
-  queryParams: {
+export default class CodeSearchRoute extends Route {
+  queryParams = {
     codeQuery: {
       replace: true
     },
     regex: {
       replace: true
     }
-  }
-});
+  };
+}

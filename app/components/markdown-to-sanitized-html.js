@@ -1,5 +1,5 @@
+import { layout } from "@ember-decorators/component";
 import MarkdownToHtml from 'ember-cli-showdown/components/markdown-to-html';
 
-export default MarkdownToHtml.extend({
-  layout: ''
-});
+@layout('')
+export default class MarkdownToSanitizedHtmlComponent extends MarkdownToHtml {}

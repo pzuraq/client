@@ -1,9 +1,10 @@
+import { tagName } from "@ember-decorators/component";
 import Component from '@ember/component';
 
-export default Component.extend({
-  tagName: '',
-  label: '',
-  value: null,
-  selectedValue: null,
-  updateSelectedValue: null,
-});
+@tagName('')
+export default class ExclusiveButtonComponent extends Component {
+  label = '';
+  value = null;
+  selectedValue = null;
+  updateSelectedValue = null;
+}

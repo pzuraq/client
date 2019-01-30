@@ -1,8 +1,9 @@
+import { tagName } from "@ember-decorators/component";
 import Component from '@ember/component';
 
-export default Component.extend({
-  tagName: '',
-  label: '',
-  onToggle: null,
-  isChecked: null,
-});
+@tagName('')
+export default class ToggleSwitchComponent extends Component {
+  label = '';
+  onToggle = null;
+  isChecked = null;
+}

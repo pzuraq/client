@@ -1,9 +1,12 @@
+import { action } from "@ember-decorators/object";
 import { hash } from 'rsvp';
-import { inject as service } from '@ember/service';
+import { inject as service } from "@ember-decorators/service";
 import Route from '@ember/routing/route';
 
-export default Route.extend({
-  session: service(),
+export default class ShowRoute extends Route {
+  @service()
+  session;
+
   model(params) {
     let name = params.name.replace(/%2F/i, '/');
     let addon = this.get('store').query('addon', { filter: { name }, include: 'versions,maintainers,keywords,latest-review,latest-review.version,latest-addon-version,categories', page: { limit: 1 } }, { reload: true }).then((addons) => {
@@ -24,19 +27,21 @@ export default Route.extend({
     }
 
     return hash(data);
-  },
+  }
 
   titleToken(model) {
     return model.addon.get('name');
-  },
+  }
 
   afterModel() {
     this.get('emberVersions').fetch();
-  },
-  emberVersions: service(),
-  actions: {
-    error() {
-      this.replaceWith('model-not-found');
-    }
   }
-});
+
+  @service()
+  emberVersions;
+
+  @action
+  error() {
+    this.replaceWith('model-not-found');
+  }
+}

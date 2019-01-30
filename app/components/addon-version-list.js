@@ -1,37 +1,45 @@
-import { gt } from '@ember/object/computed';
-import { computed } from '@ember/object';
-import { inject as service } from '@ember/service';
+import { gt } from "@ember-decorators/object/computed";
+import { action, computed } from "@ember-decorators/object";
+import { inject as service } from "@ember-decorators/service";
 import Component from '@ember/component';
 
-export default Component.extend({
-  showAll: false,
-  emberVersions: service(),
-  showingVersions: computed('versions', 'showAll', function() {
+export default class AddonVersionListComponent extends Component {
+  showAll = false;
+
+  @service()
+  emberVersions;
+
+  @computed('versions', 'showAll')
+  get showingVersions() {
     if (this.get('showAll')) {
       return this.get('versions');
     }
     return (this.get('versions') || []).slice(0, 10);
-  }),
-  emberVersionDataAfterOldestShowingAddonVersion: computed('emberVersions.versionData', 'showingVersions.lastObject', function() {
+  }
+
+  @computed('emberVersions.versionData', 'showingVersions.lastObject')
+  get emberVersionDataAfterOldestShowingAddonVersion() {
     let oldestVersionDate = this.get('showingVersions.lastObject.released');
     return this.get('emberVersions.versionData').filter(function(version) {
       return version.released > oldestVersionDate;
     });
-  }),
-  combinedVersions: computed(
-    'emberVersionDataAfterOldestShowingAddonVersion',
-    'showingVersions',
-    function() {
-      return (this.get('emberVersionDataAfterOldestShowingAddonVersion') || []).concat(this.get('showingVersions')).sortBy('released').reverse();
-    }
-  ),
-  moreThan10Versions: gt('versions.length', 10),
-  thereAreHiddenVersions: computed('moreThan10Versions', 'showAll', function() {
-    return this.get('moreThan10Versions') && !this.get('showAll');
-  }),
-  actions: {
-    showAllVersions() {
-      this.set('showAll', true);
-    }
   }
-});
+
+  @computed('emberVersionDataAfterOldestShowingAddonVersion', 'showingVersions')
+  get combinedVersions() {
+    return (this.get('emberVersionDataAfterOldestShowingAddonVersion') || []).concat(this.get('showingVersions')).sortBy('released').reverse();
+  }
+
+  @gt('versions.length', 10)
+  moreThan10Versions;
+
+  @computed('moreThan10Versions', 'showAll')
+  get thereAreHiddenVersions() {
+    return this.get('moreThan10Versions') && !this.get('showAll');
+  }
+
+  @action
+  showAllVersions() {
+    this.set('showAll', true);
+  }
+}

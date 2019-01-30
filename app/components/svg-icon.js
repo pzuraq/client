@@ -1,8 +1,8 @@
+import { tagName } from '@ember-decorators/component';
 import Component from '@ember/component';
 
-export default Component.extend({
-  tagName: '',
-  alignBaseline: true,
-}).reopenClass({
-  positionalParams: ['iconName']
-});
+@tagName('')
+export default class SvgIconComponent extends Component {
+  static positionalParams = ['iconName'];
+  alignBaseline = true;
+}

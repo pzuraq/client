@@ -1,21 +1,34 @@
-import { computed } from '@ember/object';
-import { notEmpty } from '@ember/object/computed';
-import Service, { inject as service } from '@ember/service';
+import { computed } from "@ember-decorators/object";
+import { notEmpty } from "@ember-decorators/object/computed";
+import Service from '@ember/service';
 
-export default Service.extend({
-  ajax: service(),
-  features: service(),
-  store: service(),
-  data: null,
-  url: 'https://api.github.com/repos/emberjs/ember.js/releases?per_page=100',
-  isLoaded: notEmpty('data'),
-  versionData: computed('isLoaded', 'data', function() {
+import { inject as service } from "@ember-decorators/service";
+
+export default class EmberVersionsService extends Service {
+  @service()
+  ajax;
+
+  @service()
+  features;
+
+  @service()
+  store;
+
+  data = null;
+  url = 'https://api.github.com/repos/emberjs/ember.js/releases?per_page=100';
+
+  @notEmpty('data')
+  isLoaded;
+
+  @computed('isLoaded', 'data')
+  get versionData() {
     if (!this.get('isLoaded')) {
       return [];
     }
     let data = this.get('data');
     return data.map(dataForVersion).compact();
-  }),
+  }
+
   fetch() {
     if (this.get('isLoaded')) {
       return;
@@ -35,7 +48,7 @@ export default Service.extend({
       });
     }
   }
-});
+}
 
 const betaRegex = /beta/;
 const majorOrMinorRegex = /\.0$/;

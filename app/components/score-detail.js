@@ -1,10 +1,11 @@
+import { action } from "@ember-decorators/object";
 import Component from '@ember/component';
 
-export default Component.extend({
-  showExplanation: false,
-  actions: {
-    toggleExplainScore() {
-      this.toggleProperty('showExplanation');
-    }
+export default class ScoreDetailComponent extends Component {
+  showExplanation = false;
+
+  @action
+  toggleExplainScore() {
+    this.toggleProperty('showExplanation');
   }
-});
+}

@@ -1,11 +1,11 @@
-import { computed } from '@ember/object';
+import { wrapComputed, computed } from "@ember-decorators/object";
 import { bind } from '@ember/runloop';
 import $ from 'jquery';
 import { Promise as EmberPromise } from 'rsvp';
 import Service from '@ember/service';
 import LocalStore from '../utils/local-storage';
 
-export default Service.extend({
+export default class SessionService extends Service {
   open(email, password) {
     let session = this;
     return new EmberPromise(function(resolve, reject) {
@@ -31,13 +31,15 @@ export default Service.extend({
       session.clearToken();
       console.log('Failed logging in'); // eslint-disable-line no-console
     });
-  },
+  }
+
   fetch() {
     let token = LocalStore.fetch('sessionToken');
     if (token) {
       this.set('token', token);
     }
-  },
+  }
+
   close() {
     let session = this;
     return new EmberPromise(function(resolve, reject) {
@@ -52,16 +54,21 @@ export default Service.extend({
     }).finally(function() {
       session.clearToken();
     });
-  },
+  }
+
   clearToken() {
     this.set('token', null);
     LocalStore.remove('sessionToken');
-  },
-  isAuthenticated: isPresent('token'),
-  header: computed('token', function() {
+  }
+
+  @isPresent('token')
+  isAuthenticated;
+
+  @computed('token')
+  get header() {
     return { 'Authorization': `Token token=${this.get('token')}` };
-  })
-});
+  }
+}
 
 function isPresent(strProp) {
   return computed(strProp, function() {

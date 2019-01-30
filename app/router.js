@@ -1,27 +1,29 @@
 import { get } from '@ember/object';
 import { scheduleOnce } from '@ember/runloop';
-import { inject as service } from '@ember/service';
+import { inject as service } from '@ember-decorators/service';
 import EmberRouter from '@ember/routing/router';
 import config from './config/environment';
 import RouterScroll from 'ember-router-scroll';
 
-const Router = EmberRouter.extend(RouterScroll, {
-  location: config.locationType,
-  rootURL: config.rootURL,
-  metrics: service(),
+class Router extends EmberRouter.extend(RouterScroll) {
+  location = config.locationType;
+  rootURL = config.rootURL;
+
+  @service()
+  metrics;
 
   willTransition() {
-    this._super(...arguments);
+    super.willTransition(...arguments);
     performance.mark('willTransition');
-  },
+  }
 
   didTransition() {
-    this._super(...arguments);
+    super.didTransition(...arguments);
     this._trackPage();
     performance.mark('didTransition');
-  },
+  }
 
-  previousPage: null,
+  previousPage = null;
 
   _trackPage() {
     scheduleOnce('afterRender', this, () => {
@@ -40,7 +42,7 @@ const Router = EmberRouter.extend(RouterScroll, {
       }
     });
   }
-});
+}
 
 Router.map(function() {
   this.route('categories', function() {

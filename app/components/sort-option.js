@@ -1,14 +1,16 @@
-import { computed } from '@ember/object';
+import { tagName } from "@ember-decorators/component";
+import { action, computed } from "@ember-decorators/object";
 import Component from '@ember/component';
 
-export default Component.extend({
-  tagName: '',
-  isSelected: computed('selectedSort', 'key', function() {
+@tagName('')
+export default class SortOptionComponent extends Component {
+  @computed('selectedSort', 'key')
+  get isSelected() {
     return this.get('selectedSort') === this.get('key');
-  }),
-  actions: {
-    sortBy(key) {
-      this.sendAction('sortBy', key);
-    }
   }
-});
+
+  @action
+  sortBy(key) {
+    this.sendAction('sortBy', key);
+  }
+}

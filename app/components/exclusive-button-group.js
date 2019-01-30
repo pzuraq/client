@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 
-export default Component.extend({
-  selectedValue: null,
-  updateSelectedValue: null,
-});
+export default class ExclusiveButtonGroupComponent extends Component {
+  selectedValue = null;
+  updateSelectedValue = null;
+}

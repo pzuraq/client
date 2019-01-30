@@ -1,9 +1,11 @@
+import { tagName } from "@ember-decorators/component";
 import Component from '@ember/component';
 
-export default Component.extend({
-  tagName: '',
-  resultsCollapsed: false,
+@tagName('')
+export default class SearchResultSetComponent extends Component {
+  resultsCollapsed = false;
+
   toggleResultsExpansion() {
     this.toggleProperty('resultsCollapsed');
   }
-});
+}

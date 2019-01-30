@@ -1,7 +1,7 @@
 import { hash } from 'rsvp';
 import Route from '@ember/routing/route';
 
-export default Route.extend({
+export default class DateRoute extends Route {
   model(params) {
     return hash({
       date: params.date,
@@ -21,4 +21,4 @@ export default Route.extend({
       })
     });
   }
-});
+}

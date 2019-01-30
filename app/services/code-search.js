@@ -1,14 +1,18 @@
-import Service, { inject as service } from '@ember/service';
+import { wrapComputed } from "@ember-decorators/object";
+import Service from '@ember/service';
+import { inject as service } from "@ember-decorators/service";
 import { task } from 'ember-concurrency';
 import config from 'ember-observer/config/environment';
 const PageSize = config.codeSearchPageSize;
 
-export default Service.extend({
-  apiAjax: service(),
+export default class CodeSearchService extends Service {
+  @service()
+  apiAjax;
 
-  store: service(),
+  @service()
+  store;
 
-  addons: task(function* (query, regex) {
+  @wrapComputed(task(function* (query, regex) {
     let addons;
 
     let { results } = yield this.get('apiAjax').request('/search/addons', {
@@ -29,14 +33,16 @@ export default Service.extend({
         return { addon, count: result.count, files: result.files };
       }
     }).compact();
-  }),
+  }))
+  addons;
 
-  usages: task(function* (addon, query, regex) {
+  @wrapComputed(task(function* (addon, query, regex) {
     let response = yield this.get('apiAjax').request('/search/source', {
       data: {
         addon, query, regex
       }
     });
     return response.results;
-  })
-});
+  }))
+  usages;
+}
