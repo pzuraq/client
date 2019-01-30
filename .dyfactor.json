@@ -1,0 +1,5 @@
+{
+  "navigation": {
+    "pages": ["localhost:4200/tests?runtimedata"]
+  }
+}

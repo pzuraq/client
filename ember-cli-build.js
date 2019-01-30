@@ -12,6 +12,9 @@ module.exports = function(defaults) {
     fingerprint: {},
     sourcemaps: {
       extensions: ['js']
+    },
+    'ember-cli-babel': {
+      includeExternalHelpers: true,
     }
   };
 
