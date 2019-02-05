@@ -1,6 +1,7 @@
-import { tagName } from "@ember-decorators/component";
+import { tagName } from '@ember-decorators/component';
 import { compare } from '@ember/utils';
-import { action, computed } from "@ember-decorators/object";
+import { computed } from '@ember/object';
+import { action } from '@ember-decorators/object';
 import Component from '@ember/component';
 
 @tagName('')
@@ -9,24 +10,34 @@ export default class EmberVersionCompatibilityComponent extends Component {
 
   @computed('testResult.emberVersionCompatibilities.@each.emberVersion')
   get versionCompatibilitiesForReleasedVersions() {
-    return this.get('testResult.emberVersionCompatibilities')
-      .filter((versionCompatibility) => !versionCompatibility.get('emberVersion').match(/(beta|canary)/));
+    return this.get('testResult.emberVersionCompatibilities').filter(
+      versionCompatibility =>
+        !versionCompatibility.get('emberVersion').match(/(beta|canary)/)
+    );
   }
 
   @computed('versionCompatibilitiesForReleasedVersions.@each.emberVersion')
   get sortedVersionCompatibilities() {
-    return this.get('versionCompatibilitiesForReleasedVersions').toArray().sort(sortByVersion);
+    return this.get('versionCompatibilitiesForReleasedVersions')
+      .toArray()
+      .sort(sortByVersion);
   }
 
   @computed('versionCompatibilitiesForReleasedVersions.@each.compatible')
   get allTestsPassed() {
-    return this.get('versionCompatibilitiesForReleasedVersions').every((versionCompatibility) => versionCompatibility.get('compatible'));
+    return this.get('versionCompatibilitiesForReleasedVersions').every(
+      versionCompatibility => versionCompatibility.get('compatible')
+    );
   }
 
   @computed('sortedVersionCompatibilities.[]')
   get compatibilitySemverString() {
-    let earliestVersion = this.get('sortedVersionCompatibilities.lastObject.emberVersion');
-    let latestVersion = this.get('sortedVersionCompatibilities.firstObject.emberVersion');
+    let earliestVersion = this.get(
+      'sortedVersionCompatibilities.lastObject.emberVersion'
+    );
+    let latestVersion = this.get(
+      'sortedVersionCompatibilities.firstObject.emberVersion'
+    );
 
     return `>=${earliestVersion} <=${latestVersion}`;
   }
@@ -40,7 +51,7 @@ export default class EmberVersionCompatibilityComponent extends Component {
 function extractVersionParts(versionNumber) {
   let matches = versionNumber.match(/^(\d+)\.(\d+)\.(\d+)/);
   if (matches) {
-    return matches.slice(1).map((x) => parseInt(x, 10));
+    return matches.slice(1).map(x => parseInt(x, 10));
   }
   return null;
 }

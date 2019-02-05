@@ -1,5 +1,5 @@
-import { alias } from "@ember-decorators/object/computed";
-import { computed } from "@ember-decorators/object";
+import { alias } from '@ember/object/computed';
+import { computed } from '@ember/object';
 import Component from '@ember/component';
 
 export default class HumanUrlComponent extends Component {

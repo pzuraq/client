@@ -1,8 +1,8 @@
-import { computed } from "@ember-decorators/object";
-import { notEmpty } from "@ember-decorators/object/computed";
+import { computed } from '@ember/object';
+import { notEmpty } from '@ember/object/computed';
 import Service from '@ember/service';
 
-import { inject as service } from "@ember-decorators/service";
+import { inject as service } from '@ember/service';
 
 export default class EmberVersionsService extends Service {
   @service()
@@ -35,17 +35,23 @@ export default class EmberVersionsService extends Service {
     }
 
     if (this.get('features').isEnabled('ember-versions-model')) {
-      this.get('store').queryRecord('ember-versions', {}).then((response) => {
-        this.set('data', response.get('githubResponse'));
-      }).catch(() => {
-        this.set('data', null);
-      });
+      this.get('store')
+        .queryRecord('ember-versions', {})
+        .then(response => {
+          this.set('data', response.get('githubResponse'));
+        })
+        .catch(() => {
+          this.set('data', null);
+        });
     } else {
-      this.get('ajax').request(this.url).then((response) => {
-        this.set('data', response);
-      }).catch(() => {
-        this.set('data', null);
-      });
+      this.get('ajax')
+        .request(this.url)
+        .then(response => {
+          this.set('data', response);
+        })
+        .catch(() => {
+          this.set('data', null);
+        });
     }
   }
 }
@@ -67,6 +73,6 @@ function dataForVersion(version) {
   return {
     version: `Ember ${version.tag_name}`,
     released: new Date(version.published_at),
-    isEmber: true
+    isEmber: true,
   };
 }

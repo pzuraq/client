@@ -1,5 +1,5 @@
-import { classNames } from "@ember-decorators/component";
-import { computed } from "@ember-decorators/object";
+import { classNames } from '@ember-decorators/component';
+import { computed } from '@ember/object';
 import Component from '@ember/component';
 
 @classNames('test-result-status')
@@ -10,7 +10,11 @@ export default class TestResultStatusComponent extends Component {
   )
   get statusText() {
     if (this.get('testResult.succeeded')) {
-      if (this.get('testResult.emberVersionCompatibilities.firstObject.compatible')) {
+      if (
+        this.get(
+          'testResult.emberVersionCompatibilities.firstObject.compatible'
+        )
+      ) {
         return 'Passed';
       } else {
         return 'Failed';

@@ -1,6 +1,5 @@
-import { wrapComputed } from "@ember-decorators/object";
 import Service from '@ember/service';
-import { inject as service } from "@ember-decorators/service";
+import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency';
 
 export default class SearchService extends Service {
@@ -10,74 +9,85 @@ export default class SearchService extends Service {
   _autocompleteData = null;
   _latestSearchResults = null;
 
-  @wrapComputed(task(function* () {
+  @task(function*() {
     if (!this.get('_autocompleteData')) {
       let data = yield this.get('ajax').request('/api/v2/autocomplete_data');
       this.set('_autocompleteData', {
         addons: data.addons.sortBy('score').reverse(),
         categories: data.categories,
-        maintainers: data.maintainers
+        maintainers: data.maintainers,
       });
     }
     return this.get('_autocompleteData');
-  }))
+  })
   _fetchAutocompleteData;
 
   _searchAddons(query, possibleAddons) {
     let addonResultsMatchingOnName = findMatches(query, 'name', possibleAddons);
-    let addonResultsMatchingOnDescription = findMatches(query, 'description', possibleAddons);
-    let addonIds = [].concat(addonResultsMatchingOnName, addonResultsMatchingOnDescription).uniq().mapBy('id');
+    let addonResultsMatchingOnDescription = findMatches(
+      query,
+      'description',
+      possibleAddons
+    );
+    let addonIds = []
+      .concat(addonResultsMatchingOnName, addonResultsMatchingOnDescription)
+      .uniq()
+      .mapBy('id');
     return {
       matchIds: addonIds,
-      matchCount: addonIds.length
+      matchCount: addonIds.length,
     };
   }
 
   _searchCategories(query, possibleCategories) {
-    let categoryIds = findMatches(query, 'name', possibleCategories).mapBy('id');
+    let categoryIds = findMatches(query, 'name', possibleCategories).mapBy(
+      'id'
+    );
     return {
       matchIds: categoryIds,
-      matchCount: categoryIds.length
+      matchCount: categoryIds.length,
     };
   }
 
   _searchMaintainers(query, possibleMaintainers) {
-    let maintainerIds = findMatches(query, 'name', possibleMaintainers).mapBy('id');
+    let maintainerIds = findMatches(query, 'name', possibleMaintainers).mapBy(
+      'id'
+    );
     return {
       matchIds: maintainerIds,
-      matchCount: maintainerIds.length
+      matchCount: maintainerIds.length,
     };
   }
 
-  @wrapComputed(task(function* (query) {
+  @task(function*(query) {
     let results = yield this.get('ajax').request('/api/v2/search', {
       data: {
-        query
-      }
+        query,
+      },
     });
 
     let addonMatchMap = {};
-    results.search.forEach((result) => {
+    results.search.forEach(result => {
       addonMatchMap[result.addon_id] = result.matches;
     });
 
     return {
       matchIds: Object.keys(addonMatchMap),
       matchMap: addonMatchMap,
-      matchCount: results.search.length
+      matchCount: results.search.length,
     };
-  }))
+  })
   _searchReadmes;
 
-  @wrapComputed(task(function* (query) {
+  @task(function*(query) {
     let data = yield this.get('_fetchAutocompleteData').perform();
     let trimmed = query.trim();
     let addonResultsMatchingOnName = findAddonNameMatches(trimmed, data.addons);
     return addonResultsMatchingOnName.mapBy('name');
-  }))
+  })
   searchAddonNames;
 
-  @wrapComputed(task(function* (query, options) {
+  @task(function*(query, options) {
     let data = yield this.get('_fetchAutocompleteData').perform();
     let addonResults = this._searchAddons(query, data.addons);
     let categoryResults = this._searchCategories(query, data.categories);
@@ -92,11 +102,15 @@ export default class SearchService extends Service {
       maintainerResults,
       categoryResults,
       readmeResults,
-      length: (addonResults.matchCount + maintainerResults.matchCount + categoryResults.matchCount + readmeResults.matchCount)
+      length:
+        addonResults.matchCount +
+        maintainerResults.matchCount +
+        categoryResults.matchCount +
+        readmeResults.matchCount,
     };
     this.set('_latestSearchResults', results);
     return results;
-  }))
+  })
   search;
 }
 
@@ -113,14 +127,16 @@ function findAddonNameMatches(searchTerm, addons) {
   let query = escapeForRegex(stripEmberPrefixes(searchTerm));
   let matcher = new RegExp(query, 'i');
 
-  let matches = addons.map(function(item) {
-    let trimmedName = stripEmberPrefixes(item.name);
-    let match = matcher.exec(trimmedName);
-    if (match) {
-      return { item, match };
-    }
-    return null;
-  }).compact();
+  let matches = addons
+    .map(function(item) {
+      let trimmedName = stripEmberPrefixes(item.name);
+      let match = matcher.exec(trimmedName);
+      if (match) {
+        return { item, match };
+      }
+      return null;
+    })
+    .compact();
 
   let sortByMatchIndexThenScoreThenAddonName = function(a, b) {
     if (a.match.index < b.match.index) {

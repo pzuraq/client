@@ -1,5 +1,5 @@
 import { action } from "@ember-decorators/object";
-import { sort, filterBy } from "@ember-decorators/object/computed";
+import { sort, filterBy } from "@ember/object/computed";
 import Controller from '@ember/controller';
 
 export default class NewController extends Controller {

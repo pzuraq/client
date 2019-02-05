@@ -1,6 +1,5 @@
-import { wrapComputed } from "@ember-decorators/object";
 import Service from '@ember/service';
-import { inject as service } from "@ember-decorators/service";
+import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency';
 import config from 'ember-observer/config/environment';
 const PageSize = config.codeSearchPageSize;
@@ -12,37 +11,48 @@ export default class CodeSearchService extends Service {
   @service()
   store;
 
-  @wrapComputed(task(function* (query, regex) {
+  @task(function*(query, regex) {
     let addons;
 
     let { results } = yield this.get('apiAjax').request('/search/addons', {
       data: {
-        query, regex
-      }
+        query,
+        regex,
+      },
     });
 
-    if (results.length < (4 * PageSize)) {
-      let idsParam = results.map((r) => r.addon).join(',');
-      addons = yield this.get('store').query('addon', { filter: { id: idsParam }, include: 'categories' })
+    if (results.length < 4 * PageSize) {
+      let idsParam = results.map(r => r.addon).join(',');
+      addons = yield this.get('store').query('addon', {
+        filter: { id: idsParam },
+        include: 'categories',
+      });
     } else {
-      addons = yield this.get('store').query('addon', { filter: { codeSearch: true }, page: { limit: 10000 } });
+      addons = yield this.get('store').query('addon', {
+        filter: { codeSearch: true },
+        page: { limit: 10000 },
+      });
     }
-    return results.map((result) => {
-      let addon = addons.find((a) => a.get('id') === result.addon);
-      if (addon) {
-        return { addon, count: result.count, files: result.files };
-      }
-    }).compact();
-  }))
+    return results
+      .map(result => {
+        let addon = addons.find(a => a.get('id') === result.addon);
+        if (addon) {
+          return { addon, count: result.count, files: result.files };
+        }
+      })
+      .compact();
+  })
   addons;
 
-  @wrapComputed(task(function* (addon, query, regex) {
+  @task(function*(addon, query, regex) {
     let response = yield this.get('apiAjax').request('/search/source', {
       data: {
-        addon, query, regex
-      }
+        addon,
+        query,
+        regex,
+      },
     });
     return response.results;
-  }))
+  })
   usages;
 }

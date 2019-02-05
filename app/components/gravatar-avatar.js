@@ -1,5 +1,5 @@
-import { attribute, tagName } from "@ember-decorators/component";
-import { computed } from "@ember-decorators/object";
+import { attribute, tagName } from '@ember-decorators/component';
+import { computed } from '@ember/object';
 import Component from '@ember/component';
 
 @tagName('img')

@@ -1,4 +1,4 @@
-import { sort, filterBy } from "@ember-decorators/object/computed";
+import { sort, filterBy } from "@ember/object/computed";
 import Controller from '@ember/controller';
 
 export default class IndexController extends Controller {

@@ -1,5 +1,5 @@
 import { tagName } from "@ember-decorators/component";
-import { sort } from "@ember-decorators/object/computed";
+import { sort } from "@ember/object/computed";
 import Component from '@ember/component';
 
 @tagName('')

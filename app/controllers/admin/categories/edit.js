@@ -1,6 +1,6 @@
 import { action } from "@ember-decorators/object";
 import { Promise as EmberPromise } from 'rsvp';
-import { filterBy, empty, gt, filter, sort, oneWay, alias } from "@ember-decorators/object/computed";
+import { filterBy, empty, gt, filter, sort, oneWay, alias } from "@ember/object/computed";
 import Controller from '@ember/controller';
 
 export default class EditController extends Controller {

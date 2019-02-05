@@ -1,4 +1,4 @@
-import { sort, filterBy } from "@ember-decorators/object/computed";
+import { sort, filterBy } from "@ember/object/computed";
 import Component from '@ember/component';
 
 export default class CategoryFinderComponent extends Component {

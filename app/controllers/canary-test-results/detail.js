@@ -1,4 +1,4 @@
-import { alias } from "@ember-decorators/object/computed";
+import { alias } from "@ember/object/computed";
 import Controller from '@ember/controller';
 
 export default class DetailController extends Controller {

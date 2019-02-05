@@ -1,4 +1,4 @@
-import { wrapComputed, computed } from "@ember-decorators/object";
+import { computed } from '@ember/object';
 import { bind } from '@ember/runloop';
 import $ from 'jquery';
 import { Promise as EmberPromise } from 'rsvp';
@@ -15,22 +15,24 @@ export default class SessionService extends Service {
         data: { email, password },
         dataType: 'json',
         success: bind(null, resolve),
-        error: bind(null, reject)
+        error: bind(null, reject),
       });
-    }).then(function(response) {
-      return new EmberPromise(function(resolve, reject) {
-        if (response.token) {
-          session.set('token', response.token);
-          LocalStore.save('sessionToken', response.token);
-          resolve();
-        } else {
-          reject();
-        }
+    })
+      .then(function(response) {
+        return new EmberPromise(function(resolve, reject) {
+          if (response.token) {
+            session.set('token', response.token);
+            LocalStore.save('sessionToken', response.token);
+            resolve();
+          } else {
+            reject();
+          }
+        });
+      })
+      .catch(function() {
+        session.clearToken();
+        console.log('Failed logging in'); // eslint-disable-line no-console
       });
-    }).catch(function() {
-      session.clearToken();
-      console.log('Failed logging in'); // eslint-disable-line no-console
-    });
   }
 
   fetch() {
@@ -49,7 +51,7 @@ export default class SessionService extends Service {
         dataType: 'json',
         headers: session.get('header'),
         success: bind(null, resolve),
-        error: bind(null, reject)
+        error: bind(null, reject),
       });
     }).finally(function() {
       session.clearToken();
@@ -66,13 +68,13 @@ export default class SessionService extends Service {
 
   @computed('token')
   get header() {
-    return { 'Authorization': `Token token=${this.get('token')}` };
+    return { Authorization: `Token token=${this.get('token')}` };
   }
 }
 
 function isPresent(strProp) {
   return computed(strProp, function() {
     let str = this.get(strProp);
-    return typeof str !== 'undefined' && !(/^\s*$/).test(str) && (str !== null);
+    return typeof str !== 'undefined' && !/^\s*$/.test(str) && str !== null;
   });
 }

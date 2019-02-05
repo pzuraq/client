@@ -1,5 +1,5 @@
 import Route from '@ember/routing/route';
-import { inject } from "@ember-decorators/service";
+import { inject } from "@ember/service";
 
 export default class ReviewRoute extends Route {
   queryParams = {

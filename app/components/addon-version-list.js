@@ -1,6 +1,7 @@
-import { gt } from "@ember-decorators/object/computed";
-import { action, computed } from "@ember-decorators/object";
-import { inject as service } from "@ember-decorators/service";
+import { computed } from '@ember/object';
+import { gt } from '@ember/object/computed';
+import { action } from '@ember-decorators/object';
+import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 
 export default class AddonVersionListComponent extends Component {
@@ -27,7 +28,10 @@ export default class AddonVersionListComponent extends Component {
 
   @computed('emberVersionDataAfterOldestShowingAddonVersion', 'showingVersions')
   get combinedVersions() {
-    return (this.get('emberVersionDataAfterOldestShowingAddonVersion') || []).concat(this.get('showingVersions')).sortBy('released').reverse();
+    return (this.get('emberVersionDataAfterOldestShowingAddonVersion') || [])
+      .concat(this.get('showingVersions'))
+      .sortBy('released')
+      .reverse();
   }
 
   @gt('versions.length', 10)

@@ -1,11 +1,11 @@
 import Controller from '@ember/controller';
-import { computed } from "@ember-decorators/object";
-import { readOnly, oneWay } from "@ember-decorators/object/computed";
-import { inject } from "@ember-decorators/service";
+import { computed } from '@ember/object';
+import { readOnly, oneWay } from '@ember/object/computed';
+import { inject } from '@ember/service';
 import { lists } from 'ember-observer/services/admin-lists';
 
-const possibleLists = Object.keys(lists).map((key) => {
-  return { title: lists[key].title, key }
+const possibleLists = Object.keys(lists).map(key => {
+  return { title: lists[key].title, key };
 });
 
 export default class ReviewController extends Controller {
@@ -33,6 +33,8 @@ export default class ReviewController extends Controller {
 
   selectList(list) {
     this.set('selectedListKey', list.key);
-    this.get('router').transitionTo('admin.review', { queryParams: { list: list.key } });
+    this.get('router').transitionTo('admin.review', {
+      queryParams: { list: list.key },
+    });
   }
 }

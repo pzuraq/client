@@ -1,10 +1,11 @@
-import { action, computed } from "@ember-decorators/object";
-import { sort, alias } from "@ember-decorators/object/computed";
+import { computed } from '@ember/object';
+import { action } from '@ember-decorators/object';
+import { sort, alias } from '@ember/object/computed';
 import Controller from '@ember/controller';
 
 export default class ShowController extends Controller {
   queryParams = {
-    addonSortKey: 'sort'
+    addonSortKey: 'sort',
   };
 
   addonSortKey = 'score';
@@ -26,11 +27,12 @@ export default class ShowController extends Controller {
   @computed('addonSortKey')
   get addonSorting() {
     let sortKeyMapping = {
-      'latestVersionDate': ['latestVersionDate:desc'],
-      'name': ['name:asc'],
-      'score': ['isDeprecated:asc', 'score:desc']
+      latestVersionDate: ['latestVersionDate:desc'],
+      name: ['name:asc'],
+      score: ['isDeprecated:asc', 'score:desc'],
     };
-    let sortKey = sortKeyMapping[this.get('addonSortKey')] || sortKeyMapping.score;
+    let sortKey =
+      sortKeyMapping[this.get('addonSortKey')] || sortKeyMapping.score;
     return sortKey;
   }
 

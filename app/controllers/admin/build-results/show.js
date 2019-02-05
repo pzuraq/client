@@ -1,7 +1,8 @@
-import { action, computed } from "@ember-decorators/object";
-import { inject as service } from "@ember-decorators/service";
+import { computed } from '@ember/object';
+import { action } from '@ember-decorators/object';
+import { inject as service } from '@ember/service';
 import Controller from '@ember/controller';
-import { alias } from "@ember-decorators/object/computed";
+import { alias } from '@ember/object/computed';
 
 export default class ShowController extends Controller {
   @service('apiAjax')
@@ -34,6 +35,8 @@ export default class ShowController extends Controller {
   @action
   retryBuild() {
     this.set('hasRetriedBuild', true);
-    this.get('ajax').post(`test_results/${this.get('buildResult.id')}/retry`).catch(() => this.get('hasRetriedBuild', false));
+    this.get('ajax')
+      .post(`test_results/${this.get('buildResult.id')}/retry`)
+      .catch(() => this.get('hasRetriedBuild', false));
   }
 }

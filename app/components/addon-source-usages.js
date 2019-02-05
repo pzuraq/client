@@ -1,6 +1,7 @@
-import { inject as service } from "@ember-decorators/service";
+import { inject as service } from '@ember/service';
 import Component from '@ember/component';
-import { action, wrapComputed, computed } from "@ember-decorators/object";
+import { computed } from '@ember/object';
+import { action } from '@ember-decorators/object';
 import { isEmpty } from '@ember/utils';
 import { task } from 'ember-concurrency';
 
@@ -24,8 +25,12 @@ export default class AddonSourceUsagesComponent extends Component {
     return this.get('visibleUsageCount') < this.get('usages.length');
   }
 
-  @wrapComputed(task(function* () {
-    let usages = yield this.get('codeSearch.usages').perform(this.get('addon.id'), this.get('query'), this.get('regex'));
+  @(task(function*() {
+    let usages = yield this.get('codeSearch.usages').perform(
+      this.get('addon.id'),
+      this.get('query'),
+      this.get('regex')
+    );
     this.set('usages', filterByFilePath(usages, this.get('fileFilter')));
   }).drop())
   fetchUsages;
@@ -52,10 +57,10 @@ function filterByFilePath(usages, filterTerm) {
   let filterRegex;
   try {
     filterRegex = new RegExp(filterTerm);
-  } catch(e) {
+  } catch (e) {
     return [];
   }
-  return usages.filter((usage) => {
+  return usages.filter(usage => {
     return usage.filename.match(filterRegex);
   });
 }

@@ -1,4 +1,4 @@
-import { computed } from "@ember-decorators/object";
+import { computed } from '@ember/object';
 import JSONAPIAdapter from 'ember-data/adapters/json-api';
 
 export default class ApplicationEmberObject extends JSONAPIAdapter {

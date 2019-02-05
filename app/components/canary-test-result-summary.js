@@ -1,6 +1,6 @@
-import { readOnly, filter } from "@ember-decorators/object/computed";
+import { computed } from '@ember/object';
+import { readOnly, filter } from '@ember/object/computed';
 import Component from '@ember/component';
-import { wrapComputed, computed } from "@ember-decorators/object";
 import computedPercent from 'ember-observer/utils/computed-percent';
 
 function computedFormattedPercent(percentPropertyName) {
@@ -15,18 +15,24 @@ function computedFormattedPercent(percentPropertyName) {
 }
 
 export default class CanaryTestResultSummaryComponent extends Component {
-  @filter('testResults', (testResult) => {
+  @filter('testResults', testResult => {
     return !testResult.get('succeeded');
   })
   errorBuilds;
 
-  @filter('testResults', (testResult) => {
-    return testResult.get('succeeded') && !testResult.get('emberVersionCompatibilities.firstObject.compatible');
+  @filter('testResults', testResult => {
+    return (
+      testResult.get('succeeded') &&
+      !testResult.get('emberVersionCompatibilities.firstObject.compatible')
+    );
   })
   failedBuilds;
 
-  @filter('testResults', (testResult) => {
-    return testResult.get('succeeded') && testResult.get('emberVersionCompatibilities.firstObject.compatible');
+  @filter('testResults', testResult => {
+    return (
+      testResult.get('succeeded') &&
+      testResult.get('emberVersionCompatibilities.firstObject.compatible')
+    );
   })
   passedBuilds;
 
@@ -42,21 +48,21 @@ export default class CanaryTestResultSummaryComponent extends Component {
   @readOnly('testResults.length')
   numberOfBuilds;
 
-  @wrapComputed(computedPercent('numberOfErrorBuilds', 'numberOfBuilds'))
+  @computedPercent('numberOfErrorBuilds', 'numberOfBuilds')
   percentOfErrorBuilds;
 
-  @wrapComputed(computedPercent('numberOfFailedBuilds', 'numberOfBuilds'))
+  @computedPercent('numberOfFailedBuilds', 'numberOfBuilds')
   percentOfFailedBuilds;
 
-  @wrapComputed(computedPercent('numberOfPassedBuilds', 'numberOfBuilds'))
+  @computedPercent('numberOfPassedBuilds', 'numberOfBuilds')
   percentOfPassedBuilds;
 
-  @wrapComputed(computedFormattedPercent('percentOfErrorBuilds'))
+  @computedFormattedPercent('percentOfErrorBuilds')
   formattedPercentOfErrorBuilds;
 
-  @wrapComputed(computedFormattedPercent('percentOfFailedBuilds'))
+  @computedFormattedPercent('percentOfFailedBuilds')
   formattedPercentOfFailedBuilds;
 
-  @wrapComputed(computedFormattedPercent('percentOfPassedBuilds'))
+  @computedFormattedPercent('percentOfPassedBuilds')
   formattedPercentOfPassedBuilds;
 }

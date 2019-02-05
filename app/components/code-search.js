@@ -1,9 +1,9 @@
-import { classNames } from "@ember-decorators/component";
-import { inject as service } from "@ember-decorators/service";
-import { readOnly, notEmpty, sum, mapBy } from "@ember-decorators/object/computed";
+import { classNames } from '@ember-decorators/component';
+import { inject as service } from '@ember/service';
+import { readOnly, notEmpty, sum, mapBy } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
 import Component from '@ember/component';
-import { wrapComputed, computed } from "@ember-decorators/object";
+import { computed } from '@ember/object';
 import { isEmpty, isBlank } from '@ember/utils';
 import { task, timeout } from 'ember-concurrency';
 import config from 'ember-observer/config/environment';
@@ -82,15 +82,22 @@ export default class CodeSearchComponent extends Component {
 
   @computed('filteredResults', 'sort', 'sortAscending')
   get sortedFilteredResults() {
-    return sortResults(this.get('filteredResults'), this.get('sort'), this.get('sortAscending'));
+    return sortResults(
+      this.get('filteredResults'),
+      this.get('sort'),
+      this.get('sortAscending')
+    );
   }
 
   @computed('sortedFilteredResults', 'page')
   get displayingResults() {
-    return this._getResultsUpToPage(this.get('sortedFilteredResults'), this.get('page'));
+    return this._getResultsUpToPage(
+      this.get('sortedFilteredResults'),
+      this.get('page')
+    );
   }
 
-  @wrapComputed(task(function* () {
+  @(task(function*() {
     let query = this.get('cleanedSearchInput');
     this.set('results', null);
     this.set('page', 1);
@@ -99,17 +106,24 @@ export default class CodeSearchComponent extends Component {
       return;
     }
 
-    this.get('metrics').trackEvent({ category: 'Code Search', action: 'Search', label: query });
+    this.get('metrics').trackEvent({
+      category: 'Code Search',
+      action: 'Search',
+      label: query,
+    });
 
     this.set('codeQuery', query);
-    let results = yield this.get('codeSearch.addons').perform(query, this.get('regex'));
+    let results = yield this.get('codeSearch.addons').perform(
+      query,
+      this.get('regex')
+    );
     this.set('quotedLastSearch', quoteSearchTerm(query, this.get('regex')));
 
     this.set('results', results);
   }).restartable())
   search;
 
-  @wrapComputed(task(function*(fileFilter) {
+  @(task(function*(fileFilter) {
     yield timeout(250);
 
     if (!isEmpty(fileFilter)) {
@@ -133,7 +147,9 @@ export default class CodeSearchComponent extends Component {
 
   @computed('displayingResults.length', 'filteredResults.length')
   get canViewMore() {
-    return this.get('displayingResults.length') < this.get('filteredResults.length');
+    return (
+      this.get('displayingResults.length') < this.get('filteredResults.length')
+    );
   }
 
   viewMore() {
@@ -142,7 +158,10 @@ export default class CodeSearchComponent extends Component {
 
   sortBy(key) {
     let oldKey = this.get('sort');
-    if (oldKey === key || this.get('sortAscending') !== defaultSortAscendingFor(key)) {
+    if (
+      oldKey === key ||
+      this.get('sortAscending') !== defaultSortAscendingFor(key)
+    ) {
       this.set('sortAscending', !this.get('sortAscending'));
     }
 
@@ -208,18 +227,18 @@ function filterByFilePath(results, filterTerm) {
   let filterRegex;
   try {
     filterRegex = new RegExp(filterTerm);
-  } catch(e) {
+  } catch (e) {
     return [];
   }
-  results.forEach((result) => {
-    let filteredFiles = result.files.filter((filePath) => {
+  results.forEach(result => {
+    let filteredFiles = result.files.filter(filePath => {
       return filePath.match(filterRegex);
     });
     if (filteredFiles.length > 0) {
       filteredList.push({
         addon: result.addon,
         files: filteredFiles,
-        count: filteredFiles.length
+        count: filteredFiles.length,
       });
     }
   });
